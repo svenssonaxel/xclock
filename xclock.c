@@ -46,6 +46,10 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/extensions/XKBbells.h>
 #endif
 
+#ifndef NO_I18N
+#include <locale.h> /* for setlocale() */
+Boolean no_locale = True; /* if True, use old behavior */
+#endif
 
 /* Command line options table.  Only resources are entered here...there is a
    pass over the remaining options after XtParseCommand is let loose. */
@@ -144,6 +148,18 @@ main(int argc, char *argv[])
     Arg arg;
     Pixmap icon_pixmap = None;
     XtAppContext app_con;
+
+#ifndef NO_I18N
+    char *locale_name = setlocale(LC_ALL,"");
+    XtSetLanguageProc ( NULL, NULL, NULL );
+
+    if(!locale_name || 0 == strcmp(locale_name,"C")) {
+	no_locale = True;
+    }
+    else {
+	no_locale = False;
+    }
+#endif
 
     toplevel = XtOpenApplication(&app_con, "XClock",
 				 options, XtNumber(options), &argc, argv, NULL,
