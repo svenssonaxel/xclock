@@ -46,7 +46,7 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/programs/xclock/Clock.c,v 3.26 2003/10/25 00:52:37 dawes Exp $ */
+/* $XFree86$ */
 
 #include <X11/Xlib.h>
 #include <X11/StringDefs.h>

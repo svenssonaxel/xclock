@@ -49,7 +49,7 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/programs/xclock/Clock.h,v 1.12 2002/10/21 13:33:07 alanh Exp $ */
+/* $XFree86$ */
 
 #ifndef _XawClock_h
 #define _XawClock_h
