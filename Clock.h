@@ -49,6 +49,7 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
+/* $XFree86: xc/programs/xclock/Clock.h,v 1.12 2002/10/21 13:33:07 alanh Exp $ */
 
 #ifndef _XawClock_h
 #define _XawClock_h
@@ -65,6 +66,7 @@ SOFTWARE.
 
  Name		     Class		RepType		Default Value
  ----		     -----		-------		-------------
+ twentyfour	     Boolean		Boolean		True
  analog		     Boolean		Boolean		True
  background	     Background		Pixel		white
  backingStore	     BackingStore	BackingStore	default
@@ -79,6 +81,7 @@ SOFTWARE.
  highlight	     Foreground		Pixel		black
  mappedWhenManaged   MappedWhenManaged	Boolean		True
  padding	     Margin		int		8
+ utime		     Boolean		Boolean		False
  update		     Interval		int		60 (seconds)
  width		     Width		Dimension	164
  x		     Position		Position	0
@@ -92,14 +95,50 @@ SOFTWARE.
 #define XtNhand "hands"
 
 
+		/* Boolean: 24-hour if TRUE */
+#define XtNtwentyfour "twentyfour"
+
 		/* Boolean: digital if FALSE */
 #define XtNanalog "analog"
+
+		/* Boolean: only hour/minute if TRUE */
+#define XtNbrief  "brief"
+
+                /* String: will be used as format arg to 
+                   "strftime" if not empty string */
+#define XtNstrftime "strftime"
+
+		/* Boolean: show seconds since Epoch if TRUE */
+#define XtNutime  "utime"
 
 		/* Boolean:  */
 #define XtNchime "chime"
 
 		/* Int: amount of space around outside of clock */
 #define XtNpadding "padding"
+
+		/* Boolean: use Render extension if TRUE */
+#define XtNrender "render"
+
+		/* Boolean: use backing pixmap for double buffering */
+#define XtNbuffer "buffer"
+
+		/* RenderColor: colors for various clock elements */
+#define XtNhourColor "hourColor"
+#define XtNminuteColor "minuteColor"
+#define XtNsecondColor "secondColor"
+#define XtNmajorColor "majorColor"
+#define XtNminorColor "minorColor"
+
+#define XtRXftColor "XftColor"
+
+#define XtNface "face"
+#define XtCFace "Face"
+#define XtRXftFont "XftFont"
+
+		/* Boolean: use sharp rendering for Render polygons */
+#define XtNsharp "sharp"
+#define XtCSharp "Sharp"
 
 typedef struct _ClockRec *ClockWidget;  /* completely defined in ClockPrivate.h */
 typedef struct _ClockClassRec *ClockWidgetClass;    /* completely defined in ClockPrivate.h */

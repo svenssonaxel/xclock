@@ -2,6 +2,8 @@
 
 /*
  * xclock --  Hacked from Tony Della Fera's much hacked clock program.
+ *
+ * "-strftime" option added by George Belotsky, Open Light Software Inc.
  */
 
 /*
@@ -27,7 +29,10 @@ Except as contained in this notice, the name of The Open Group shall not be
 used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
  */
+/* $XFree86: xc/programs/xclock/xclock.c,v 1.16 2002/10/21 13:33:08 alanh Exp $ */
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <X11/Xatom.h>
 #include <X11/Intrinsic.h>
 #include <X11/StringDefs.h>
@@ -41,7 +46,6 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/extensions/XKBbells.h>
 #endif
 
-extern void exit();
 
 /* Command line options table.  Only resources are entered here...there is a
    pass over the remaining options after XtParseCommand is let loose. */
@@ -57,9 +61,22 @@ static XrmOptionDescRec options[] = {
 {"-d",		"*clock.analog",	XrmoptionNoArg,		"FALSE"},
 {"-digital",	"*clock.analog",	XrmoptionNoArg,		"FALSE"},
 {"-analog",	"*clock.analog",	XrmoptionNoArg,		"TRUE"},
+{"-twelve",	"*clock.twentyfour",	XrmoptionNoArg,		"FALSE"},
+{"-twentyfour",	"*clock.twentyfour",	XrmoptionNoArg,		"TRUE"},
+{"-brief",	"*clock.brief",		XrmoptionNoArg,		"TRUE"},
+{"-utime",	"*clock.utime",		XrmoptionNoArg,		"TRUE"},
+{"-strftime",	"*clock.strftime",	XrmoptionSepArg,	NULL},
+#ifdef XRENDER
+{"-face",	"*clock.face",		XrmoptionSepArg,	NULL},
+{"-render",	"*clock.render",	XrmoptionNoArg,		"TRUE"},
+{"-norender",	"*clock.render",	XrmoptionNoArg,		"FALSE"},
+{"-sharp",	"*clock.sharp",		XrmoptionNoArg,		"TRUE"},
+#endif
 };
 
-static void quit();
+static void quit ( Widget w, XEvent *event, String *params, 
+		   Cardinal *num_params );
+
 static XtActionsRec xclock_actions[] = {
     { "quit",	quit },
 };
@@ -69,32 +86,30 @@ static Atom wm_delete_window;
 /*
  * Report the syntax for calling xclock.
  */
-Syntax(call)
-	char *call;
+static void
+Syntax(char *call)
 {
-	(void) printf ("Usage: %s [-analog] [-bw <pixels>] [-digital]\n", call);
+	(void) printf ("Usage: %s [-analog] [-bw <pixels>] [-digital] [-brief] [-utime] [-strftime <fmt-str>]\n", call);
 	(void) printf ("       [-fg <color>] [-bg <color>] [-hd <color>]\n");
 	(void) printf ("       [-hl <color>] [-bd <color>]\n");
 	(void) printf ("       [-fn <font_name>] [-help] [-padding <pixels>]\n");
 	(void) printf ("       [-rv] [-update <seconds>] [-display displayname]\n");
-	(void) printf ("       [-geometry geom]\n\n");
+#ifdef XRENDER
+	(void) printf ("       [-render] [-face <face name>] [-sharp]\n");
+#endif
+	(void) printf ("       [-geometry geom] [-twelve] [-twentyfour]\n\n");
 	exit(1);
 }
 
-static void die(w, client_data, call_data)
-    Widget	w;
-    XtPointer	client_data;
-    XtPointer	call_data;
+static void 
+die(Widget w, XtPointer client_data, XtPointer call_data)
 {
     XCloseDisplay(XtDisplayOfObject(w));
     exit(0);
 }
 
-static void quit (w, event, params, num_params)
-    Widget w;		/* ApplicationShellWidget */
-    XEvent *event;
-    String *params;
-    Cardinal *num_params;
+static void 
+quit(Widget w, XEvent *event, String *params, Cardinal *num_params)
 {
     Arg arg;
 
@@ -113,18 +128,16 @@ static void quit (w, event, params, num_params)
     }
 }
 
-static void save(w, client_data, call_data)
-    Widget w;
-    XtPointer client_data, call_data;
+static void 
+save(Widget w, XtPointer client_data, XtPointer call_data)
 {
     XtCheckpointToken token = (XtCheckpointToken) call_data;
     /* we have nothing to save */
     token->save_success = True;
 }
 
-void main(argc, argv)
-    int argc;
-    char **argv;
+int 
+main(int argc, char *argv[])
 {
     Widget toplevel;
     Arg arg;
@@ -137,7 +150,6 @@ void main(argc, argv)
     if (argc != 1) Syntax(argv[0]);
     XtAddCallback(toplevel, XtNdieCallback, die, NULL);
     XtAddCallback(toplevel, XtNsaveCallback, save, NULL);
-    
     XtAppAddActions (app_con, xclock_actions, XtNumber(xclock_actions));
 
     /*
@@ -149,12 +161,14 @@ void main(argc, argv)
 
     XtSetArg(arg, XtNiconPixmap, &icon_pixmap);
     XtGetValues(toplevel, &arg, ONE);
+
     if (icon_pixmap == None) {
 	arg.value = (XtArgVal)XCreateBitmapFromData(XtDisplay(toplevel),
 				       XtScreen(toplevel)->root,
 				       (char *)clock_bits, clock_width, clock_height);
 	XtSetValues (toplevel, &arg, ONE);
     }
+
     XtSetArg(arg, XtNiconMask, &icon_pixmap);
     XtGetValues(toplevel, &arg, ONE);
     if (icon_pixmap == None) {
@@ -172,4 +186,5 @@ void main(argc, argv)
     (void) XSetWMProtocols (XtDisplay(toplevel), XtWindow(toplevel),
 			    &wm_delete_window, 1);
     XtAppMainLoop (app_con);
+    exit(0);
 }
