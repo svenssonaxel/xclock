@@ -42,8 +42,9 @@ APPDEFAULTFILES = \
         XClk-col \
         XClock
 
+SUFFIXES = .ad
 
-$(APPDEFAULTFILES): %: %.ad
+.ad:
 	cp $< $@
 
 appdefault_DATA = $(APPDEFAULTFILES)

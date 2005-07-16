@@ -31,7 +31,33 @@ AM_CONFIG_HEADER(config.h)
 AC_PROG_CC
 AC_PROG_INSTALL
 
-XAW_CHECK_XPRINT_SUPPORT(DEP)
+AC_CHECK_FUNCS([strlcpy])
+
+dnl Required dependencies
+PKG_CHECK_MODULES(X11, x11)
+XAW_CHECK_XPRINT_SUPPORT(XAW)
+DEP_CFLAGS="$X11_CFLAGS $XAW_CFLAGS"
+DEP_LIBS="$X11_LIBS $XAW_LIBS"
+
+dnl Optional dependencies
+AC_ARG_WITH(xft, AC_HELP_STRING([--with-xft],[Use Xft2 and Xrender for rendering (Default is YES)]),use_xft="$withval",use_xft="try")
+if test x$use_xft != xno ; then
+	PKG_CHECK_MODULES(XFT, [xrender xft])
+	AC_SEARCH_LIBS(sqrt, [m])
+	DEP_CFLAGS="$DEP_CFLAGS $XFT_CFLAGS"
+	DEP_LIBS="$DEP_LIBS $XFT_LIBS"
+	AC_DEFINE([XRENDER],1,[Define to use X Render Extension])
+	AC_DEFINE([XFREE86_FT2],1,[Define to use Xft2 library])
+fi	
+
+AC_ARG_WITH(xkb, AC_HELP_STRING([--with-xkb],[Use XKB to sound bells (Default is YES)]),use_xkb="$withval",use_xkb="try")
+if test x$use_xkb != xno ; then
+	PKG_CHECK_MODULES(XKB, xkbfile)
+	DEP_CFLAGS="$DEP_CFLAGS $XKB_CFLAGS"
+	DEP_LIBS="$DEP_LIBS $XKB_LIBS"
+	AC_DEFINE([XKB],1,[Define to use XkbStdBell])
+fi
+
 AC_SUBST(DEP_CFLAGS)
 AC_SUBST(DEP_LIBS)
 
