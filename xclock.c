@@ -1,4 +1,5 @@
 /* $Xorg: xclock.c,v 1.4 2001/02/09 02:05:39 xorgcvs Exp $ */
+/* $XdotOrg: $ */
 
 /*
  * xclock --  Hacked from Tony Della Fera's much hacked clock program.
@@ -30,6 +31,11 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
  */
 /* $XFree86: xclock.c,v 1.16 2002/10/21 13:33:08 alanh Exp $ */
+
+
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>

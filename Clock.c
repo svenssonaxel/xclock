@@ -1,5 +1,5 @@
 /* $Xorg: Clock.c,v 1.4 2001/02/09 02:05:39 xorgcvs Exp $ */
-/* $XdotOrg: xc/programs/xclock/Clock.c,v 1.2 2004/04/23 19:54:39 eich Exp $ */
+/* $XdotOrg: xc/programs/xclock/Clock.c,v 1.3 2004/10/30 20:33:44 alanc Exp $ */
 
 /***********************************************************
 
@@ -84,6 +84,10 @@ SOFTWARE.
  *	     bgpixmap - Alan Coopersmith (as part of STSF project) - Sept. 2001
  */
 /* $XFree86: xc/programs/xclock/Clock.c,v 3.25 2003/07/04 16:24:30 eich Exp $ */
+
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #include <X11/Xlib.h>
 #include <X11/StringDefs.h>
@@ -1350,7 +1354,7 @@ clock_tic(XtPointer client_data, XtIntervalId *id)
 		XClearArea (dpy, win,
 		    clear_from, 0, w->core.width - clear_from, w->core.height,
 		    False);
-#ifdef HAS_STRLCAT
+#if defined(HAS_STRLCAT) || defined(HAVE_STRLCPY)
 	    strlcpy (w->clock.prev_time_string+i, time_ptr+i,
 		     sizeof(w->clock.prev_time_string)-i);
 #else
