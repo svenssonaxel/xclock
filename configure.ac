@@ -34,10 +34,10 @@ AC_PROG_INSTALL
 AC_CHECK_FUNCS([strlcpy])
 
 dnl Required dependencies
-PKG_CHECK_MODULES(X11, x11)
+PKG_CHECK_MODULES(XCLOCK_X11, x11)
 XAW_CHECK_XPRINT_SUPPORT(XAW)
-DEP_CFLAGS="$X11_CFLAGS $XAW_CFLAGS"
-DEP_LIBS="$X11_LIBS $XAW_LIBS"
+XCLOCK_CFLAGS="$XCLOCK_X11_CFLAGS $XAW_CFLAGS"
+XCLOCK_LIBS="$XCLOCK_X11_LIBS $XAW_LIBS"
 
 dnl Optional dependencies
 AC_ARG_WITH(xft, AC_HELP_STRING([--with-xft],[Use Xft2 and Xrender for rendering (Default is YES)]),use_xft="$withval",use_xft="try")
@@ -58,7 +58,7 @@ if test x$use_xkb != xno ; then
 	AC_DEFINE([XKB],1,[Define to use XkbStdBell])
 fi
 
-AC_SUBST(DEP_CFLAGS)
-AC_SUBST(DEP_LIBS)
+AC_SUBST(XCLOCK_CFLAGS)
+AC_SUBST(XCLOCK_LIBS)
 
 AC_OUTPUT([Makefile])

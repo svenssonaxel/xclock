@@ -21,8 +21,8 @@
 
 bin_PROGRAMS = xclock
 
-xclock_CFLAGS = $(DEP_CFLAGS)
-xclock_LDADD = $(DEP_LIBS)
+xclock_CFLAGS = $(XCLOCK_CFLAGS)
+xclock_LDADD = $(XCLOCK_LIBS)
 
 xclock_SOURCES =	\
         Clock.c \
