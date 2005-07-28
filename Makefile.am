@@ -49,7 +49,9 @@ SUFFIXES = .ad
 
 appdefault_DATA = $(APPDEFAULTFILES)
 
-EXTRA_DIST = $(APPDEFAULTFILES:%=%.ad)
+EXTRA_DIST = \
+	$(APPDEFAULTFILES:%=%.ad) \
+	clmask.bit \
+	clock.bit
 
 CLEANFILES = $(APPDEFAULTFILES)
-
