@@ -22,7 +22,7 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.57])
-AC_INIT(xclock,[7.0], [xorg@freedestkop.org],xclock)
+AC_INIT(xclock,[0.99.0], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],xclock)
 AM_INIT_AUTOMAKE([dist-bzip2])
 AM_MAINTAINER_MODE
 
@@ -60,5 +60,7 @@ fi
 
 AC_SUBST(XCLOCK_CFLAGS)
 AC_SUBST(XCLOCK_LIBS)
+
+XORG_RELEASE_VERSION
 
 AC_OUTPUT([Makefile])
