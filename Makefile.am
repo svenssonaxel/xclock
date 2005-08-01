@@ -30,7 +30,7 @@ xclock_SOURCES =	\
         ClockP.h \
         xclock.c
 
-dist_man_MANS = \
+dist_man1_MANS = \
         xclock.man
 
 # App default files  (*.ad)
