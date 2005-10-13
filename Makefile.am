@@ -1,3 +1,4 @@
+# $Id$
 # 
 #  Copyright 2005  Red Hat, Inc.
 # 
@@ -39,7 +40,7 @@ appdefaultdir = $(sysconfdir)/X11/app-defaults
 
 
 APPDEFAULTFILES = \
-        XClk-col \
+        XClock-color \
         XClock
 
 SUFFIXES = .ad
