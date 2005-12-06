@@ -599,15 +599,15 @@ Initialize (Widget request, Widget new, ArgList args, Cardinal *num_args)
 	   }
 
 	   /*
-	    * initialize time format from CFTIME if set, otherwize
-	    * default to "%C".  This emulates ascftime, but we use
+	    * initialize time format from CFTIME if set, otherwise
+	    * default to "%c".  This emulates ascftime, but we use
 	    * strftime so we can limit the string buffer size to
 	    * avoid possible buffer overflow.
 	    */
 	   if ((w->clock.strftime == NULL) || (w->clock.strftime[0] == 0)) {
 	       w->clock.strftime = getenv("CFTIME");
 	       if (w->clock.strftime == NULL) {
-		   w->clock.strftime = "%C";
+		   w->clock.strftime = "%c";
 	       }
 	   }
        }
