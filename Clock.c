@@ -1140,11 +1140,11 @@ Destroy(Widget gw)
 {
      ClockWidget w = (ClockWidget) gw;
      if (w->clock.interval_id) XtRemoveTimeOut (w->clock.interval_id);
-#ifdef RENDER
+#ifdef XRENDER
     if (w->clock.picture)
-	XRenderFreePicture (dpy, w->clock.picture);
+	XRenderFreePicture (XtDisplay(w), w->clock.picture);
     if (w->clock.fill_picture)
-	XRenderFreePicture (dpy, w->clock.fill_picture);
+	XRenderFreePicture (XtDisplay(w), w->clock.fill_picture);
 #endif
      XtReleaseGC (gw, w->clock.myGC);
      XtReleaseGC (gw, w->clock.HighGC);
