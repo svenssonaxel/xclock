@@ -97,7 +97,7 @@ SOFTWARE.
 #include <stdio.h>
 #include <X11/Xos.h>
 #include <X11/Xaw/XawInit.h>
-#ifndef NO_I18N
+#if !defined(NO_I18N) && defined(HAVE_ICONV)
 #include <iconv.h>
 #include <langinfo.h>
 #include <errno.h>
@@ -236,7 +236,9 @@ static void DrawClockFace ( ClockWidget w );
 static int clock_round ( double x );
 static Boolean SetValues ( Widget gcurrent, Widget grequest, Widget gnew, 
 			   ArgList args, Cardinal *num_args );
+#if !defined(NO_I18N) && defined(HAVE_ICONV)
 static char *clock_to_utf8(const char *);
+#endif
 
 ClockClassRec clockClassRec = {
     { /* core fields */
@@ -631,16 +633,20 @@ Initialize (Widget request, Widget new, ArgList args, Cardinal *num_args)
        if (w->clock.render)
        {
 	XGlyphInfo  extents;
-	char *utf8_str;
 #ifndef NO_I18N
+# ifdef HAVE_ICONV
+	char *utf8_str;
+# endif	
 	if (w->clock.utf8) 
 	    XftTextExtentsUtf8 (XtDisplay (w), w->clock.face,
 				(FcChar8 *) str, len, &extents);
+# ifdef HAVE_ICONV
 	else if ((utf8_str = clock_to_utf8(str)) != NULL) {
 	        XftTextExtentsUtf8 (XtDisplay (w), w->clock.face,
 			(FcChar8 *)utf8_str, strlen(utf8_str), &extents);
 		free(utf8_str);
 	}
+# endif	
 	else
 #endif
 	    XftTextExtents8 (XtDisplay (w), w->clock.face,
@@ -811,9 +817,11 @@ RenderTextBounds (ClockWidget w, char *str, int off, int len,
 {
     XGlyphInfo  head, tail;
     int	    x, y;
-    char *utf8_str;
 
 #ifndef NO_I18N
+# ifdef HAVE_ICONV
+    char *utf8_str;
+# endif
     if (w->clock.utf8)
     {
 	XftTextExtentsUtf8 (XtDisplay (w), w->clock.face, 
@@ -821,6 +829,7 @@ RenderTextBounds (ClockWidget w, char *str, int off, int len,
 	XftTextExtentsUtf8 (XtDisplay (w), w->clock.face, 
 			    (FcChar8 *) str + off, len - off, &tail);
     }
+# ifdef HAVE_ICONV
     else if ((utf8_str = clock_to_utf8(str)) != NULL)
     {
 	XftTextExtentsUtf8 (XtDisplay (w), w->clock.face, 
@@ -829,6 +838,7 @@ RenderTextBounds (ClockWidget w, char *str, int off, int len,
 		   (FcChar8 *)utf8_str + off, strlen(utf8_str) - off, &tail);
 	free(utf8_str);
     }
+# endif    
     else
 #endif
     {
@@ -1298,7 +1308,9 @@ clock_tic(XtPointer client_data, XtIntervalId *id)
 	    {
 		XRectangle  old_tail, new_tail, head;
 		int	    x, y;
+#if !defined(NO_I18N) && defined(HAVE_ICONV)
 		char *utf8_str;
+#endif		
 
 		RenderTextBounds (w, w->clock.prev_time_string, i, prev_len,
 				  &old_tail, 0, 0);
@@ -1325,7 +1337,8 @@ clock_tic(XtPointer client_data, XtIntervalId *id)
 				    x, y,
 				    (FcChar8 *) time_ptr + i, len - i);
 
-		} 
+		}
+# ifdef HAVE_ICONV		
 		else if ((utf8_str =
 		    clock_to_utf8(time_ptr + i)) != NULL) {
 		    	XftDrawStringUtf8 (w->clock.draw,
@@ -1335,6 +1348,7 @@ clock_tic(XtPointer client_data, XtIntervalId *id)
 				    (FcChar8 *)utf8_str, strlen(utf8_str) - i);
 		    free(utf8_str);
 		}
+# endif		
 		else
 #endif 
 		{
@@ -2079,7 +2093,7 @@ SetValues(Widget gcurrent, Widget grequest, Widget gnew,
 
 }
 
-#ifndef NO_I18N
+#if !defined(NO_I18N) && defined(HAVE_ICONV)
 static char *
 clock_to_utf8(const char *str)
 {

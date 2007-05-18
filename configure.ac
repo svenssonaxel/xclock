@@ -33,6 +33,9 @@ AC_PROG_INSTALL
 
 AC_CHECK_FUNCS([strlcpy])
 
+AC_SEARCH_LIBS([iconv], [iconv], 
+	[AC_DEFINE(HAVE_ICONV, 1, [Define to 1 if iconv() is available.])])
+
 dnl Required dependencies
 PKG_CHECK_MODULES(XCLOCK_X11, x11)
 XAW_CHECK_XPRINT_SUPPORT(XAW)
