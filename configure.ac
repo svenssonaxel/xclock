@@ -31,7 +31,7 @@ AM_CONFIG_HEADER(config.h)
 AC_PROG_CC
 AC_PROG_INSTALL
 
-AC_CHECK_FUNCS([strlcpy])
+AC_CHECK_FUNCS([strlcpy getpid])
 
 AC_SEARCH_LIBS([iconv], [iconv], 
 	[AC_DEFINE(HAVE_ICONV, 1, [Define to 1 if iconv() is available.])])

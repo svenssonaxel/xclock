@@ -57,6 +57,10 @@ in this Software without prior written authorization from The Open Group.
 Boolean no_locale = True; /* if True, use old behavior */
 #endif
 
+#ifdef HAVE_GETPID
+# include <unistd.h>
+#endif
+
 /* Command line options table.  Only resources are entered here...there is a
    pass over the remaining options after XtParseCommand is let loose. */
 
@@ -208,6 +212,17 @@ main(int argc, char *argv[])
 				    False);
     (void) XSetWMProtocols (XtDisplay(toplevel), XtWindow(toplevel),
 			    &wm_delete_window, 1);
+
+#ifdef HAVE_GETPID
+    {
+	pid_t pid = getpid();
+	XChangeProperty(XtDisplay(toplevel), XtWindow(toplevel),
+			XInternAtom(XtDisplay(toplevel), "_NET_WM_PID", False),
+			XA_CARDINAL, 32, PropModeReplace,
+			(unsigned char *) &pid, 1);
+    }
+#endif
+    
     XtAppMainLoop (app_con);
     exit(0);
 }
