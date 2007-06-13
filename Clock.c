@@ -680,9 +680,12 @@ Initialize (Widget request, Widget new, ArgList args, Cardinal *num_args)
 		 + 2 * w->clock.padding;
 	       min_height = fse->max_logical_extent.height +
 		 3 * w->clock.padding;
+	   } else {
+	       no_locale = True;
 	   }
        }
-       else
+
+       if (!no_locale)
 #endif /* NO_I18N */
        {
 	   if (w->clock.font == NULL)
