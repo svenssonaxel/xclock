@@ -30,10 +30,11 @@
 xclock \- analog / digital clock for X
 .SH SYNOPSIS
 .ta 8n
-\fBxclock\fP [ \fB\-help\fP ] [ \fB\-analog\fP ] [ \fB\-digital\fP ]
+\fBxclock\fP [ \fB\-help\fP ] [ \fB\-analog\fP | \fB\-digital\fP ]
 [ \fB\-brief\fP ] [ \fB\-chime\fP ] [ \fB\-hd\fP \fIcolor\fP ]
 [ \fB\-hl\fP \fIcolor\fP ] [ \fB\-update\fP \fIseconds\fP ]
 [ \fB\-strftime\fP \fIformat\fP ]
+[ \fB\-twelve\fP | \fB-twentyfour\fP | \fB-utime\fP ]
 [ \fB\-padding\fP \fInumber\fP ]
 [ \fB\-norender\fP ]
 [ \fB\-render\fP ]
@@ -64,7 +65,7 @@ This option indicates that a 24 hour digital clock should be used.
 This option indicates that the digital clock should only display the hours
 and minutes fields.  The default is to show the full time and date information.
 .TP 8
-\fB\-utime\fP or \fB\-d\fP
+\fB\-utime\fP
 This option indicates that a digital clock should display seconds since
 the Epoch (in format '970012340 seconds since Epoch' instead of a standard
 24-hour time.
