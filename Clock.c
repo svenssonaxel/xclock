@@ -1248,7 +1248,7 @@ Redisplay(Widget gw, XEvent *event, Region region)
 #endif
 	w->clock.prev_time_string[0] = '\0';
     }
-    clock_tic((XtPointer)w, (XtIntervalId)0);
+    clock_tic((XtPointer)w, (XtIntervalId *)NULL);
 }
 
 /* ARGSUSED */
