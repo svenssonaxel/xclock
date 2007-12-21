@@ -140,8 +140,8 @@ SOFTWARE.
 #define XtNsharp "sharp"
 #define XtCSharp "Sharp"
 
-typedef struct _ClockRec *ClockWidget;  /* completely defined in ClockPrivate.h */
-typedef struct _ClockClassRec *ClockWidgetClass;    /* completely defined in ClockPrivate.h */
+typedef struct _ClockRec *ClockWidget;  /* completely defined in ClockP.h */
+typedef struct _ClockClassRec *ClockWidgetClass;  /* completely defined in ClockP.h */
 
 extern WidgetClass clockWidgetClass;
 

@@ -85,7 +85,7 @@ typedef struct {
 	 GC	HandGC;		/* Hand GC */
 	 GC	HighGC;		/* Highlighting GC */
 /* start of graph stuff */
-	 int	update;		/* update frequence */
+	 int	update;		/* update period in second */
 	 Dimension radius;		/* radius factor */
 	 int	backing_store;	/* backing store type */
 	 Boolean chime;

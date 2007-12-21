@@ -183,7 +183,7 @@ static XtResource resources[] = {
         offset(font), XtRString, XtDefaultFont},
 #ifndef NO_I18N
      {XtNfontSet, XtCFontSet, XtRFontSet, sizeof(XFontSet),
-        offset(fontSet), XtRString, XtDefaultFontSet,},   
+        offset(fontSet), XtRString, XtDefaultFontSet},   
 #endif
     {XtNbackingStore, XtCBackingStore, XtRBackingStore, sizeof (int),
     	offset (backing_store), XtRString, "default"},
@@ -237,7 +237,7 @@ static int clock_round ( double x );
 static Boolean SetValues ( Widget gcurrent, Widget grequest, Widget gnew, 
 			   ArgList args, Cardinal *num_args );
 #if !defined(NO_I18N) && defined(HAVE_ICONV)
-static char *clock_to_utf8(const char *);
+static char *clock_to_utf8(const char *str, int in_len);
 #endif
 
 ClockClassRec clockClassRec = {
@@ -626,8 +626,7 @@ Initialize (Widget request, Widget new, ArgList args, Cardinal *num_args)
        tm = *localtime(&time_value);
        str = TimeString (w, &tm);
        len = strlen(str);
-       if (str[len - 1] == '\n') 
-	   str[--len] = '\0';
+       if (len && str[len - 1] == '\n') str[--len] = '\0';
 
 #ifdef XRENDER
        if (w->clock.render)
@@ -641,7 +640,7 @@ Initialize (Widget request, Widget new, ArgList args, Cardinal *num_args)
 	    XftTextExtentsUtf8 (XtDisplay (w), w->clock.face,
 				(FcChar8 *) str, len, &extents);
 # ifdef HAVE_ICONV
-	else if ((utf8_str = clock_to_utf8(str)) != NULL) {
+	else if ((utf8_str = clock_to_utf8(str, len)) != NULL) {
 	        XftTextExtentsUtf8 (XtDisplay (w), w->clock.face,
 			(FcChar8 *)utf8_str, strlen(utf8_str), &extents);
 		free(utf8_str);
@@ -654,11 +653,13 @@ Initialize (Widget request, Widget new, ArgList args, Cardinal *num_args)
 	min_width = extents.xOff + 2 * w->clock.padding;
 	min_height = w->clock.face->ascent + w->clock.face->descent +
 		     2 * w->clock.padding;
+        /*fprintf(stderr, "render min_width %i\n", min_width);*/
        }
        else
 #endif
+       { /* not XRENDER block */
 #ifndef NO_I18N 
-       if (!no_locale) {
+	 if (!no_locale) {
 	   XFontSetExtents *fse;
 
 	   if(w->clock.fontSet == NULL) {
@@ -670,24 +671,23 @@ Initialize (Widget request, Widget new, ArgList args, Cardinal *num_args)
 		 &n_missing,
 		 &default_str);
 	   }
-	   if (w->clock.fontSet != NULL)
-	   {
+	   if (w->clock.fontSet != NULL) {
 	       /* don't free this... it's freed with the XFontSet. */
 	       fse = XExtentsOfFontSet(w->clock.fontSet);
 	       
-	       min_width = XmbTextEscapement(w->clock.fontSet,str,
-		 len)
-		 + 2 * w->clock.padding;
+	       min_width = XmbTextEscapement(w->clock.fontSet,str,len) +
+		 2 * w->clock.padding;
 	       min_height = fse->max_logical_extent.height +
 		 3 * w->clock.padding;
+	       /*fprintf(stderr, "fontset min_width %i\n", min_width);*/
 	   } else {
 	       no_locale = True;
 	   }
-       }
+	 }
 
-       if (no_locale)
+	 if (no_locale)
 #endif /* NO_I18N */
-       {
+	 {
 	   if (w->clock.font == NULL)
 	       w->clock.font = XQueryFont( XtDisplay(w),
 					   XGContextFromGC(
@@ -696,7 +696,9 @@ Initialize (Widget request, Widget new, ArgList args, Cardinal *num_args)
 	       2 * w->clock.padding;
 	   min_height = w->clock.font->ascent +
 	       w->clock.font->descent + 2 * w->clock.padding;
-       }
+	   /*fprintf(stderr, "font min_width %i\n", min_width);*/
+	 }
+       } /* not XRENDER block */
     }
     if (w->core.width == 0)
 	w->core.width = min_width;
@@ -730,9 +732,9 @@ Initialize (Widget request, Widget new, ArgList args, Cardinal *num_args)
     myXGCV.foreground = w->clock.Hdpixel;
     w->clock.HandGC = XtGetGC((Widget)w, valuemask, &myXGCV);
 
-    if (w->clock.update <= 0)
-	w->clock.update = 60;	/* make invalid update's use a default */
-    w->clock.show_second_hand = (w->clock.update <= SECOND_HAND_TIME);
+    /* make invalid update's use a default */
+    /*if (w->clock.update <= 0) w->clock.update = 60;*/
+    w->clock.show_second_hand = (abs(w->clock.update) <= SECOND_HAND_TIME);
     w->clock.numseg = 0;
     w->clock.interval_id = 0;
     memset (&w->clock.otm, '\0', sizeof (w->clock.otm));
@@ -833,18 +835,23 @@ RenderTextBounds (ClockWidget w, char *str, int off, int len,
 			    (FcChar8 *) str + off, len - off, &tail);
     }
 # ifdef HAVE_ICONV
-    else if ((utf8_str = clock_to_utf8(str)) != NULL)
+    else if ((utf8_str = clock_to_utf8(str, off)) != NULL)
     {
-	XftTextExtentsUtf8 (XtDisplay (w), w->clock.face, 
-			    (FcChar8 *)utf8_str, off, &head);
-	XftTextExtentsUtf8 (XtDisplay (w), w->clock.face, 
-		   (FcChar8 *)utf8_str + off, strlen(utf8_str) - off, &tail);
+	XftTextExtentsUtf8 (XtDisplay (w), w->clock.face,
+			    (FcChar8 *)utf8_str, strlen(utf8_str), &head);
 	free(utf8_str);
+	if ((utf8_str = clock_to_utf8(str+off, len-off)) != NULL) {
+	  XftTextExtentsUtf8 (XtDisplay (w), w->clock.face, 
+			      (FcChar8 *)utf8_str, strlen(utf8_str), &tail);
+	  free(utf8_str);
+	} else
+	  goto fallback;
     }
 # endif    
     else
 #endif
     {
+    fallback:
 	XftTextExtents8 (XtDisplay (w), w->clock.face, (FcChar8 *) str, 
 			 off, &head);
 	XftTextExtents8 (XtDisplay (w), w->clock.face, (FcChar8 *) str + off, 
@@ -1251,6 +1258,118 @@ Redisplay(Widget gw, XEvent *event, Region region)
     clock_tic((XtPointer)w, (XtIntervalId *)NULL);
 }
 
+/* Choose the update times for well-defined clock states.  
+ *
+ * For example, in HH:MM:SS notation the last number rolls over 
+ * every 60 seconds and has at most 60 display states.  The sequence 
+ * depends on its initial value t0 and the update period u, e.g. 
+ *
+ *   u (s)  d (s)  ti (s)                    m (states)  l (s)
+ *    2      2     {0,2, .. 58}              30            60
+ *    7      1     {0,7, .. 56,3, .. 53}     60           420
+ *   15     15     {0,15,30,45}               4            60
+ *   45     15     {0,45,30,15}               4           180
+ *   53      1     {0,53,46, .. 4,57, .. 7}  60          3180
+ *   58      2     {0,58,56, .. 2}           30          1740
+ *   60     60     {0}                        1            60
+ *
+ * u=  update period in seconds,
+ * ti= time at update i from the reference, HH:MM:00 or HH:00:00,
+ * n=  the roll over time, the modulus, 60 s or 3600 s,
+ * m=  the sequence length, the order of u in the modulo n group Z/nZ,
+ * l=  the total sequence duration =m*u.
+ * d=  gcd(n,u) the greatest common divisor
+ *
+ * The time t(i) determines the clock state.  It follows from 
+ *
+ *   t(i)=t(i-1)+u mod n  <=>  t(i)=t(0)+i*u mod n 
+ *
+ * which defines a { t(0) .. t(m-1) } sequence of m unique elements.  
+ * Hence, u generates a subgroup U={k*u mod n : k in Z} of Z/nZ so 
+ * its order m divides n.  This m satisfies 
+ *
+ *   t(m)=t(0)  <=>  m*u mod n = 0  <=>  m*u = r*n  <=>  m=n/d, r=u/d 
+ *
+ * where d divides n and u.  Choosing 
+ *
+ *   d=gcd(n,u)  <=>  n/d and u/d are coprime  =>  m=n/d is minimum
+ *
+ * thus gives the order.  Furthermore, the greatest common divisor d is  
+ * also the minimum value generator of the set U.  Assume a generator e 
+ * where 
+ *
+ *   e|{n,u}  <=>  Ai,Ej: i*u mod n = j*e  <=>  j=f(i)=(i*u mod n)/e  
+ *
+ * such that f maps i to m=ord(u) unique values of j.  Its properties are 
+ *
+ *   j=i*u/e mod n/e   ==>  0<=j<n/e
+ *
+ *   ord(u/e, mod n/e)=n/e/gcd(n/e,u/e)=n/d=m  ==>  J={j=f(i)}, |J|=m
+ *
+ *   ord(e)=n/gcd(n,e)=n/e  
+ *
+ * from wich follows 
+ *
+ *   e=d  ==>  f: I={0,..,m-1} -> J={0,..,m-1}: j=i*r mod m is bijective 
+ *        ==>  D={k*d mod n : k in Z} = U.
+ *
+ * Any value e below d is no generator since it yields a non contiguous 
+ * J such that an l=0..n/e-1 exists not in J with l*e not in U.  
+ *
+ * The update sequence t(i) could be followed using the algorithm:
+ *
+ *   1. restore the expected value into t(i),
+ *   2. calculate the next timeout t(i+1)=t(i)+u mod n,
+ *   3. verify that the current tc(i) is between t(i)..t(i+1),
+ *   4. calculate the time to wait w=t(i+1)-tc(i) mod n,
+ *   5. store t(i+1),
+ *
+ * which implements state tracking.  This approach doesn't work well 
+ * since the set timeout w does not guarantee a next call at time 
+ * t(i+1), e.g. due to progam sleeps, time adjustments, and leap 
+ * seconds.  A robust method should only rely on the current time 
+ * tc(i) to identify t(i).  The derivation above shows 2 options:
+ *
+ *   1.  n={60,3600} and round to a multiple of d, 
+ *       but if d<u then the sequence is not guaranteed.
+ *   2.  choose n large and round to a multiple of u, 
+ *       but then the sequence resets at roll-over.  
+ *
+ * The code below implements (2) with n this year's duration in seconds 
+ * and using local time year's start as epoch.  
+ */
+static unsigned long 
+waittime(int update, struct timeval *tv, struct tm *tm)
+{
+  int twait;
+  long twaitms;
+  unsigned long retval;
+
+  if(update>0) {
+    long tcur;
+    int trem;
+
+    tcur=tm->tm_sec+60*(tm->tm_min+60*(tm->tm_hour+24*tm->tm_yday));
+    /* ti=floor(tcur/u)*u, w=u-(tcur-ti), and tcur-ti==tcur % u */
+    trem=tcur % update;
+    twait=update-trem;
+  } else {
+    twait=-update;
+  }
+
+  if(tv->tv_usec>0) {
+    long usec;
+    twait--;
+    usec=1000000-tv->tv_usec;
+    twaitms=(usec+999)/1000;  /* must round up to avoid zero retval */
+  } else {
+    twaitms=0;
+  }
+
+  retval=(unsigned long)labs(twaitms+1000*twait);
+  return retval;
+}
+
 /* ARGSUSED */
 static void 
 clock_tic(XtPointer client_data, XtIntervalId *id)
@@ -1264,12 +1383,13 @@ clock_tic(XtPointer client_data, XtIntervalId *id)
         register Window win = XtWindow(w);
 
 	X_GETTIMEOFDAY (&tv);
-	if (id || !w->clock.interval_id)
-	    w->clock.interval_id =
-		XtAppAddTimeOut( XtWidgetToApplicationContext( (Widget) w),
-				(w->clock.update - 1) * 1000 + (1000000 - tv.tv_usec)/1000, clock_tic, (XtPointer)w );
 	time_value = tv.tv_sec;
 	tm = *localtime(&time_value);
+	if (w->clock.update && (id || !w->clock.interval_id))
+	    w->clock.interval_id =
+		XtAppAddTimeOut( XtWidgetToApplicationContext( (Widget) w),
+				 waittime(w->clock.update, &tv, &tm), 
+				 clock_tic, (XtPointer)w );
 	/*
 	 * Beep on the half hour; double-beep on the hour.
 	 */
@@ -1301,7 +1421,7 @@ clock_tic(XtPointer client_data, XtIntervalId *id)
 
 	    time_ptr = TimeString (w, &tm);
 	    len = strlen (time_ptr);
-	    if (time_ptr[len - 1] == '\n') time_ptr[--len] = '\0';
+	    if (len && time_ptr[len - 1] == '\n') time_ptr[--len] = '\0';
 	    prev_len = strlen (w->clock.prev_time_string);
 	    for (i = 0; ((i < len) && (i < prev_len) && 
 	    		 (w->clock.prev_time_string[i] == time_ptr[i])); i++);
@@ -1343,12 +1463,12 @@ clock_tic(XtPointer client_data, XtIntervalId *id)
 		}
 # ifdef HAVE_ICONV		
 		else if ((utf8_str =
-		    clock_to_utf8(time_ptr + i)) != NULL) {
+		    clock_to_utf8(time_ptr + i, len - i)) != NULL) {
 		    	XftDrawStringUtf8 (w->clock.draw,
 				    &w->clock.fg_color,
 				    w->clock.face,
 				    x, y,
-				    (FcChar8 *)utf8_str, strlen(utf8_str) - i);
+				    (FcChar8 *)utf8_str, strlen(utf8_str) );
 		    free(utf8_str);
 		}
 # endif		
@@ -1999,13 +2119,13 @@ SetValues(Widget gcurrent, Widget grequest, Widget gnew,
       if (new->clock.update != current->clock.update) {
 	  if (current->clock.interval_id)
 	      XtRemoveTimeOut (current->clock.interval_id);
-	  if (XtIsRealized( (Widget) new))
+	  if (new->clock.update && XtIsRealized( (Widget) new))
 	      new->clock.interval_id = XtAppAddTimeOut( 
                                          XtWidgetToApplicationContext(gnew),
-					 new->clock.update*1000,
+					 abs(new->clock.update)*1000,
 				         clock_tic, (XtPointer)gnew);
 
-	  new->clock.show_second_hand =(new->clock.update <= SECOND_HAND_TIME);
+	  new->clock.show_second_hand =(abs(new->clock.update) <= SECOND_HAND_TIME);
 	  if (new->clock.show_second_hand != current->clock.show_second_hand)
 	    redisplay = TRUE;
       }
@@ -2098,11 +2218,10 @@ SetValues(Widget gcurrent, Widget grequest, Widget gnew,
 
 #if !defined(NO_I18N) && defined(HAVE_ICONV)
 static char *
-clock_to_utf8(const char *str)
+clock_to_utf8(const char *str, int in_len)
 {
     iconv_t cd;
     char *buf;
-    size_t in_len;
     size_t buf_size;
     size_t ileft, oleft;
     const char *inptr;
@@ -2120,7 +2239,6 @@ clock_to_utf8(const char *str)
     if (cd == (iconv_t)-1)
     	return NULL;
 
-    in_len = strlen(str);
     buf_size = MB_LEN_MAX * (in_len + 1);
     if ((buf = malloc(buf_size)) == NULL) {
     	(void) iconv_close(cd);
