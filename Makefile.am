@@ -39,8 +39,8 @@ appdefaultdir = @appdefaultdir@
 
 
 APPDEFAULTFILES = \
-        XClock-color \
-        XClock
+        app-defaults/XClock-color \
+        app-defaults/XClock
 
 SUFFIXES = .ad
 
