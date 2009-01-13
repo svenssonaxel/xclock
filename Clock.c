@@ -325,7 +325,7 @@ static void CvtStringToPixmap(
 #endif
 
 #ifdef XRENDER
-XtConvertArgRec xftColorConvertArgs[] = {
+static XtConvertArgRec xftColorConvertArgs[] = {
     {XtWidgetBaseOffset, (XtPointer)XtOffsetOf(WidgetRec, core.screen),
      sizeof(Screen *)},
     {XtWidgetBaseOffset, (XtPointer)XtOffsetOf(WidgetRec, core.colormap),
@@ -489,7 +489,7 @@ XmuCvtStringToXftFont(Display *dpy,
     return False;
 }
 
-XtConvertArgRec xftFontConvertArgs[] = {
+static XtConvertArgRec xftFontConvertArgs[] = {
     {XtWidgetBaseOffset, (XtPointer)XtOffsetOf(WidgetRec, core.screen),
      sizeof(Screen *)},
 };
@@ -752,7 +752,7 @@ Initialize (Widget request, Widget new, ArgList args, Cardinal *num_args)
 	    w->clock.can_polygon = False;
     }
     w->clock.pixmap = 0;
-    w->clock.draw = 0;
+    w->clock.draw = NULL;
     w->clock.damage.x = 0;
     w->clock.damage.y = 0;
     w->clock.damage.height = 0;
@@ -798,8 +798,8 @@ RenderClip (ClockWidget w)
 {
     Region	r;
     Drawable	d;
-    
-    RenderPrepare (w, 0);
+
+    RenderPrepare (w, NULL);
     if (w->clock.buffer)
 	d = w->clock.pixmap;
     else
@@ -1225,7 +1225,7 @@ Resize(Widget gw)
 	if (w->clock.draw)
 	{
 	    XftDrawDestroy (w->clock.draw);
-	    w->clock.draw = 0;
+	    w->clock.draw = NULL;
 	}
 	w->clock.picture = 0;
     }
@@ -1436,22 +1436,22 @@ clock_tic(XtPointer client_data, XtIntervalId *id)
 #endif		
 
 		RenderTextBounds (w, w->clock.prev_time_string, i, prev_len,
-				  &old_tail, 0, 0);
+				  &old_tail, NULL, NULL);
 		RenderUpdateRectBounds (&old_tail, &w->clock.damage);
 		RenderTextBounds (w, time_ptr, i, len,
-				  &new_tail, 0, 0);
+				  &new_tail, NULL, NULL);
 		RenderUpdateRectBounds (&new_tail, &w->clock.damage);
 		
 		while (i)
 		{
-		    RenderTextBounds (w, time_ptr, 0, i, &head, 0, 0);
+		    RenderTextBounds (w, time_ptr, 0, i, &head, NULL, NULL);
 		    if (!RenderRectIn (&head, &w->clock.damage))
 			break;
 		    i--;
 		}
 		RenderTextBounds (w, time_ptr, i, len, &new_tail, &x, &y);
 		RenderClip (w);
-		RenderPrepare (w, 0);
+		RenderPrepare (w, NULL);
 #ifndef NO_I18N
 		if (w->clock.utf8) {
 		    XftDrawStringUtf8 (w->clock.draw,
@@ -2207,7 +2207,7 @@ SetValues(Widget gcurrent, Widget grequest, Widget gnew,
 	if (new->clock.draw)
 	{
 	    XftDrawDestroy (new->clock.draw);
-	    new->clock.draw = 0;
+	    new->clock.draw = NULL;
 	}
 	new->clock.picture = 0;
     }

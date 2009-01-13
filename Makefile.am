@@ -35,24 +35,16 @@ appman_PRE = \
 
 # App default files  (*.ad)
 
+DISTCHECK_CONFIGURE_FLAGS = --with-appdefaultdir=\$${datadir}/X11/app-defaults
+
 appdefaultdir = @appdefaultdir@
 
-
-APPDEFAULTFILES = \
+dist_appdefault_DATA = \
         app-defaults/XClock-color \
         app-defaults/XClock
 
-SUFFIXES = .ad
-
-.ad:
-	[ -d app-defaults ] || mkdir app-defaults
-	cp $< $@
-
-appdefault_DATA = $(APPDEFAULTFILES)
-
 EXTRA_DIST = \
 	ChangeLog \
-	$(APPDEFAULTFILES:%=%.ad) \
 	clmask.bit \
 	clock.bit
 
@@ -70,7 +62,7 @@ MAINTAINERCLEANFILES=ChangeLog
 .PHONY: ChangeLog
 
 ChangeLog:
-	(GIT_DIR=$(top_srcdir)/.git git-log > .changelog.tmp && mv .changelog.tmp ChangeLog; rm -f .changelog.tmp) || (touch ChangeLog; echo 'git directory not found: installing possibly empty changelog.' >&2)
+	$(CHANGELOG_CMD)
 
 dist-hook: ChangeLog
 
@@ -93,7 +85,7 @@ MAN_SUBSTS = \
 	-e 's|__miscmansuffix__|$(MISC_MAN_SUFFIX)|g' \
 	-e 's|__filemansuffix__|$(FILE_MAN_SUFFIX)|g'
 
-SUFFIXES += .$(APP_MAN_SUFFIX) .man
+SUFFIXES = .$(APP_MAN_SUFFIX) .man
 
 .man.$(APP_MAN_SUFFIX):
 	sed $(MAN_SUBSTS) < $< > $@
