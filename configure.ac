@@ -1,6 +1,6 @@
 
 dnl  Copyright 2005 Red Hat, Inc.
-dnl 
+dnl
 dnl  Permission to use, copy, modify, distribute, and sell this software and its
 dnl  documentation for any purpose is hereby granted without fee, provided that
 dnl  the above copyright notice appear in all copies and that both that
@@ -10,7 +10,7 @@ dnl  advertising or publicity pertaining to distribution of the software without
 dnl  specific, written prior permission.  Red Hat makes no
 dnl  representations about the suitability of this software for any purpose.  It
 dnl  is provided "as is" without express or implied warranty.
-dnl 
+dnl
 dnl  RED HAT DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
 dnl  INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
 dnl  EVENT SHALL RED HAT BE LIABLE FOR ANY SPECIAL, INDIRECT OR
@@ -39,7 +39,7 @@ XORG_CWARNFLAGS
 
 AC_CHECK_FUNCS([strlcpy getpid])
 
-AC_SEARCH_LIBS([iconv], [iconv], 
+AC_SEARCH_LIBS([iconv], [iconv],
 	[AC_DEFINE(HAVE_ICONV, 1, [Define to 1 if iconv() is available.])])
 
 dnl Required dependencies
@@ -57,7 +57,7 @@ if test x$use_xft != xno ; then
 	XCLOCK_LIBS="$XCLOCK_LIBS $XFT_LIBS"
 	AC_DEFINE([XRENDER],1,[Define to use X Render Extension])
 	AC_DEFINE([XFREE86_FT2],1,[Define to use Xft2 library])
-fi	
+fi
 
 AC_ARG_WITH(xkb, AC_HELP_STRING([--with-xkb],[Use XKB to sound bells (Default is YES)]),use_xkb="$withval",use_xkb="try")
 if test x$use_xkb != xno ; then
