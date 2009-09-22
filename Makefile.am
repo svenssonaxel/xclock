@@ -21,7 +21,7 @@
 
 bin_PROGRAMS = xclock
 
-AM_CFLAGS = $(XCLOCK_CFLAGS)
+AM_CFLAGS = $(CWARNFLAGS) $(XCLOCK_CFLAGS)
 xclock_LDADD = $(XCLOCK_LIBS)
 
 xclock_SOURCES =	\
