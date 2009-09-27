@@ -24,3 +24,4 @@ xclock.1
 xclock-*.tar.*
 ChangeLog
 tags
+INSTALL
