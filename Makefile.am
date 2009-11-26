@@ -44,10 +44,10 @@ dist_appdefault_DATA = \
         app-defaults/XClock
 
 EXTRA_DIST = \
-	ChangeLog \
 	clmask.bit \
 	clock.bit
 
+MAINTAINERCLEANFILES = ChangeLog INSTALL
 CLEANFILES = $(APPDEFAULTFILES)
 
 appmandir = $(APP_MAN_DIR)
