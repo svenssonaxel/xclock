@@ -44,10 +44,7 @@ AC_SEARCH_LIBS([iconv], [iconv],
 	[AC_DEFINE(HAVE_ICONV, 1, [Define to 1 if iconv() is available.])])
 
 dnl Required dependencies
-PKG_CHECK_MODULES(XCLOCK_X11, x11)
-PKG_CHECK_MODULES(XAW, xaw7)
-XCLOCK_CFLAGS="$XCLOCK_X11_CFLAGS $XAW_CFLAGS"
-XCLOCK_LIBS="$XCLOCK_X11_LIBS $XAW_LIBS"
+PKG_CHECK_MODULES(XCLOCK, xaw7 xmu x11)
 
 dnl Optional dependencies
 AC_ARG_WITH(xft, AC_HELP_STRING([--with-xft],[Use Xft2 and Xrender for rendering (Default is YES)]),use_xft="$withval",use_xft="try")
