@@ -591,7 +591,7 @@ Initialize (Widget request, Widget new, ArgList args, Cardinal *num_args)
        w->clock.utf8 = False;
 
        if (!no_locale) {
-	   char *time_locale = setlocale(LC_TIME, NULL);
+	   char *time_locale = setlocale(LC_CTYPE, NULL);
 
 	   if (strstr(time_locale, "UTF-8") || strstr(time_locale, "utf8")) {
 	       w->clock.utf8 = True;
