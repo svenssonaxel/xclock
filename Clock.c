@@ -1513,7 +1513,7 @@ clock_tic(XtPointer client_data, XtIntervalId *id)
 		XClearArea (dpy, win,
 		    clear_from, 0, w->core.width - clear_from, w->core.height,
 		    False);
-#if defined(HAS_STRLCAT) || defined(HAVE_STRLCPY)
+#ifdef HAVE_STRLCPY
 	    strlcpy (w->clock.prev_time_string+i, time_ptr+i,
 		     sizeof(w->clock.prev_time_string)-i);
 #else
