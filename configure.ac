@@ -48,7 +48,7 @@ dnl Required dependencies
 PKG_CHECK_MODULES(XCLOCK, xaw7 xmu x11)
 
 dnl Optional dependencies
-AC_ARG_WITH(xft, AC_HELP_STRING([--with-xft],[Use Xft2 and Xrender for rendering (Default is YES)]),use_xft="$withval",use_xft="try")
+AC_ARG_WITH(xft, AS_HELP_STRING([--with-xft],[Use Xft2 and Xrender for rendering (Default is YES)]),use_xft="$withval",use_xft="try")
 if test x$use_xft != xno ; then
 	PKG_CHECK_MODULES(XFT, [xrender xft])
 	AC_SEARCH_LIBS(sqrt, [m])
@@ -58,7 +58,7 @@ if test x$use_xft != xno ; then
 	AC_DEFINE([XFREE86_FT2],1,[Define to use Xft2 library])
 fi
 
-AC_ARG_WITH(xkb, AC_HELP_STRING([--with-xkb],[Use XKB to sound bells (Default is YES)]),use_xkb="$withval",use_xkb="try")
+AC_ARG_WITH(xkb, AS_HELP_STRING([--with-xkb],[Use XKB to sound bells (Default is YES)]),use_xkb="$withval",use_xkb="try")
 if test x$use_xkb != xno ; then
 	PKG_CHECK_MODULES(XKB, xkbfile)
 	XCLOCK_CFLAGS="$XCLOCK_CFLAGS $XKB_CFLAGS"
@@ -70,7 +70,7 @@ fi
 PKG_CHECK_MODULES(APPDEFS, xt)
 xt_appdefaultdir=`$PKG_CONFIG --variable=appdefaultdir xt`
 AC_ARG_WITH(appdefaultdir,
-	AC_HELP_STRING([--with-appdefaultdir=<pathname>],
+	AS_HELP_STRING([--with-appdefaultdir=<pathname>],
 	  [specify directory for app-defaults files (default is autodetected)]),
 	[appdefaultdir="$withval"], [appdefaultdir="${xt_appdefaultdir}"])
 AC_SUBST(appdefaultdir)
