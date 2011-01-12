@@ -66,7 +66,6 @@ if test x$use_xkb != xno ; then
 	AC_DEFINE([XKB],1,[Define to use XkbStdBell])
 fi
 
-AC_SUBST(XCLOCK_CFLAGS)
 AC_SUBST(XCLOCK_LIBS)
 
 PKG_CHECK_MODULES(APPDEFS, xt)
