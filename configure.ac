@@ -37,7 +37,6 @@ XORG_DEFAULT_OPTIONS
 
 AM_CONFIG_HEADER(config.h)
 
-AC_PROG_CC
 
 
 AC_CHECK_FUNCS([strlcpy getpid])
