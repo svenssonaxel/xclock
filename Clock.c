@@ -2214,7 +2214,7 @@ clock_to_utf8(const char *str, int in_len)
     char *buf;
     size_t buf_size;
     size_t ileft, oleft;
-    const char *inptr;
+    ICONV_CONST char *inptr;
     char *outptr;
     size_t ret;
     const char *code_set = nl_langinfo(CODESET);

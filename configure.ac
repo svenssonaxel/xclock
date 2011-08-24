@@ -41,11 +41,11 @@ AC_CONFIG_HEADERS([config.h])
 
 AC_CHECK_FUNCS([strlcpy getpid])
 
-AC_SEARCH_LIBS([iconv], [iconv],
-	[AC_DEFINE(HAVE_ICONV, 1, [Define to 1 if iconv() is available.])])
+AM_ICONV
 
 dnl Required dependencies
 PKG_CHECK_MODULES(XCLOCK, xaw7 xmu x11)
+XCLOCK_LIBS="$XCLOCK_LIBS $LIBICONV"
 
 dnl Optional dependencies
 AC_ARG_WITH(xft, AS_HELP_STRING([--with-xft],[Use Xft2 and Xrender for rendering (Default is YES)]),use_xft="$withval",use_xft="try")
