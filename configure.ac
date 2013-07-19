@@ -44,7 +44,7 @@ AC_CHECK_FUNCS([strlcpy getpid])
 AM_ICONV
 
 dnl Required dependencies
-PKG_CHECK_MODULES(XCLOCK, xaw7 xmu x11)
+PKG_CHECK_MODULES(XCLOCK, [xaw7 xmu x11 xproto >= 7.0.17])
 XCLOCK_LIBS="$XCLOCK_LIBS $LIBICONV"
 
 dnl Optional dependencies

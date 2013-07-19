@@ -100,7 +100,7 @@ static Atom wm_delete_window;
 /*
  * Report the syntax for calling xclock.
  */
-static void
+static void _X_NORETURN
 Syntax(char *call)
 {
 	(void) printf ("Usage: %s [-analog] [-bw <pixels>] [-digital] [-brief]\n", call);
@@ -116,7 +116,7 @@ Syntax(char *call)
 	exit(1);
 }
 
-static void
+static void _X_NORETURN
 die(Widget w, XtPointer client_data, XtPointer call_data)
 {
     XCloseDisplay(XtDisplayOfObject(w));
