@@ -87,7 +87,7 @@ SOFTWARE.
 #include <stdio.h>
 #include <X11/Xos.h>
 #include <X11/Xaw/XawInit.h>
-#if !defined(NO_I18N) && defined(HAVE_ICONV)
+#if !defined(NO_I18N) && defined(HAVE_ICONV) && defined(HAVE_NL_LANGINFO)
 #include <iconv.h>
 #include <langinfo.h>
 #include <errno.h>
@@ -226,7 +226,7 @@ static void DrawClockFace ( ClockWidget w );
 static int clock_round ( double x );
 static Boolean SetValues ( Widget gcurrent, Widget grequest, Widget gnew,
 			   ArgList args, Cardinal *num_args );
-#if !defined(NO_I18N) && defined(HAVE_ICONV)
+#if !defined(NO_I18N) && defined(HAVE_ICONV) && defined(HAVE_NL_LANGINFO)
 static char *clock_to_utf8(const char *str, int in_len);
 #endif
 
@@ -623,13 +623,13 @@ Initialize (Widget request, Widget new, ArgList args, Cardinal *num_args)
        {
 	XGlyphInfo  extents;
 #ifndef NO_I18N
-# ifdef HAVE_ICONV
+# if defined(HAVE_ICONV) && defined(HAVE_NL_LANGINFO)
 	char *utf8_str;
 # endif
 	if (w->clock.utf8)
 	    XftTextExtentsUtf8 (XtDisplay (w), w->clock.face,
 				(FcChar8 *) str, len, &extents);
-# ifdef HAVE_ICONV
+# if defined(HAVE_ICONV) && defined(HAVE_NL_LANGINFO)
 	else if ((utf8_str = clock_to_utf8(str, len)) != NULL) {
 	        XftTextExtentsUtf8 (XtDisplay (w), w->clock.face,
 			(FcChar8 *)utf8_str, strlen(utf8_str), &extents);
@@ -814,7 +814,7 @@ RenderTextBounds (ClockWidget w, char *str, int off, int len,
     int	    x, y;
 
 #ifndef NO_I18N
-# ifdef HAVE_ICONV
+# if defined(HAVE_ICONV) && defined(HAVE_NL_LANGINFO)
     char *utf8_str;
 # endif
     if (w->clock.utf8)
@@ -824,7 +824,7 @@ RenderTextBounds (ClockWidget w, char *str, int off, int len,
 	XftTextExtentsUtf8 (XtDisplay (w), w->clock.face,
 			    (FcChar8 *) str + off, len - off, &tail);
     }
-# ifdef HAVE_ICONV
+# if defined(HAVE_ICONV) && defined(HAVE_NL_LANGINFO)
     else if ((utf8_str = clock_to_utf8(str, off)) != NULL)
     {
 	XftTextExtentsUtf8 (XtDisplay (w), w->clock.face,
@@ -1421,7 +1421,7 @@ clock_tic(XtPointer client_data, XtIntervalId *id)
 	    {
 		XRectangle  old_tail, new_tail, head;
 		int	    x, y;
-#if !defined(NO_I18N) && defined(HAVE_ICONV)
+#if !defined(NO_I18N) && defined(HAVE_ICONV) && defined(HAVE_NL_LANGINFO)
 		char *utf8_str;
 #endif
 
@@ -1451,7 +1451,7 @@ clock_tic(XtPointer client_data, XtIntervalId *id)
 				    (FcChar8 *) time_ptr + i, len - i);
 
 		}
-# ifdef HAVE_ICONV
+# if defined(HAVE_ICONV) && defined(HAVE_NL_LANGINFO)
 		else if ((utf8_str =
 		    clock_to_utf8(time_ptr + i, len - i)) != NULL) {
 		    	XftDrawStringUtf8 (w->clock.draw,
@@ -2206,7 +2206,7 @@ SetValues(Widget gcurrent, Widget grequest, Widget gnew,
 
 }
 
-#if !defined(NO_I18N) && defined(HAVE_ICONV)
+#if !defined(NO_I18N) && defined(HAVE_ICONV) && defined(HAVE_NL_LANGINFO)
 static char *
 clock_to_utf8(const char *str, int in_len)
 {

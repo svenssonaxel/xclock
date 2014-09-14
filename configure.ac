@@ -39,7 +39,7 @@ m4_ifndef([XORG_MACROS_VERSION],
 XORG_MACROS_VERSION(1.8)
 XORG_DEFAULT_OPTIONS
 
-AC_CHECK_FUNCS([strlcpy getpid])
+AC_CHECK_FUNCS([strlcpy getpid nl_langinfo])
 
 AM_ICONV
 
