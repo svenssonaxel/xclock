@@ -521,7 +521,7 @@ TimeString (ClockWidget w, struct tm *tm)
       if (w->clock.twentyfour)
       {
 	  static char brief[6];
-	  sprintf (brief, "%02d:%02d", tm->tm_hour, tm->tm_min);
+	  snprintf (brief, sizeof(brief), "%02d:%02d", tm->tm_hour, tm->tm_min);
 	  return brief;
       }
       else
@@ -529,7 +529,7 @@ TimeString (ClockWidget w, struct tm *tm)
 	 static char brief[9];
 	 int hour = tm->tm_hour % 12;
 	 if (!hour) hour = 12;
-	 sprintf (brief, "%02d:%02d %cM", hour, tm->tm_min,
+	 snprintf (brief, sizeof(brief), "%02d:%02d %cM", hour, tm->tm_min,
 	    tm->tm_hour >= 12 ? 'P' : 'A');
 	 return brief;
       }
@@ -539,7 +539,8 @@ TimeString (ClockWidget w, struct tm *tm)
       static char utime[35];
       Time_t tsec;
       tsec = time(NULL);
-      sprintf (utime, "%10lu seconds since Epoch", (unsigned long)tsec);
+      snprintf (utime, sizeof(utime), "%10lu seconds since Epoch",
+                (unsigned long)tsec);
       return utime;
    } else if (*w->clock.strftime) {
      /*Note: this code is probably excessively paranoid
