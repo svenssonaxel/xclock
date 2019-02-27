@@ -2173,7 +2173,7 @@ SetValues(Widget gcurrent, Widget grequest, Widget gnew,
 	  if (new->clock.update && XtIsRealized( (Widget) new))
 	      new->clock.interval_id = XtAppAddTimeOut(
                                          XtWidgetToApplicationContext(gnew),
-					 abs(new->clock.update)*1000,
+					 fabsf(new->clock.update)*1000,
 				         clock_tic, (XtPointer)gnew);
 
 	  new->clock.show_second_hand =(abs(new->clock.update) <= SECOND_HAND_TIME);
