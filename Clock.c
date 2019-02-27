@@ -1610,8 +1610,8 @@ clock_tic(XtPointer client_data, XtIntervalId *id)
 				RenderHands (w, &tm, False);
 			    }
 			    if (w->clock.show_second_hand &&
-				tm.tm_sec != w->clock.otm.tm_sec ||
-				tv.tv_usec != w->clock.otv.tv_usec)
+				(tm.tm_sec != w->clock.otm.tm_sec ||
+				tv.tv_usec != w->clock.otv.tv_usec))
 			    {
 				RenderSec (w, &w->clock.otm, &w->clock.otv, False);
 				RenderSec (w, &tm, &tv, False);
