@@ -613,7 +613,7 @@ Initialize (Widget request, Widget new, ArgList args, Cardinal *num_args)
        }
 #endif /* NO_I18N */
 
-       (void) gettimeofday(&tv, NULL);
+       X_GETTIMEOFDAY(&tv);
        tm = *localtime(&tv.tv_sec);
        str = TimeString (w, &tm);
        len = strlen(str);
