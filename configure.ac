@@ -51,7 +51,9 @@ dnl Optional dependencies
 AC_ARG_WITH(xft, AS_HELP_STRING([--with-xft],[Use Xft2 and Xrender for rendering (Default is YES)]),use_xft="$withval",use_xft="try")
 if test x$use_xft != xno ; then
 	PKG_CHECK_MODULES(XFT, [xrender xft])
+	# Solaris 11 has sqrt in libc but needs libm for sincos
 	AC_SEARCH_LIBS(sqrt, [m])
+	AC_SEARCH_LIBS(sincos, [m])
 	XCLOCK_CFLAGS="$XCLOCK_CFLAGS $XFT_CFLAGS"
 	XCLOCK_LIBS="$XCLOCK_LIBS $XFT_LIBS"
 	AC_DEFINE([XRENDER],1,[Define to use X Render Extension])
