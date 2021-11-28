@@ -1366,7 +1366,7 @@ round_time(float _update, struct tm *tm, struct timeval *tv)
  *
  *   ord(e)=n/gcd(n,e)=n/e
  *
- * from wich follows
+ * from which follows
  *
  *   e=d  ==>  f: I={0,..,m-1} -> J={0,..,m-1}: j=i*r mod m is bijective
  *        ==>  D={k*d mod n : k in Z} = U.
@@ -1384,7 +1384,7 @@ round_time(float _update, struct tm *tm, struct timeval *tv)
  *
  * which implements state tracking.  This approach doesn't work well
  * since the set timeout w does not guarantee a next call at time
- * t(i+1), e.g. due to progam sleeps, time adjustments, and leap
+ * t(i+1), e.g. due to program sleeps, time adjustments, and leap
  * seconds.  A robust method should only rely on the current time
  * tc(i) to identify t(i).  The derivation above shows 2 options:
  *
@@ -1575,7 +1575,7 @@ clock_tic(XtPointer client_data, XtIntervalId * id)
          * The second (or minute) hand is sec (or min)
          * sixtieths around the clock face. The hour hand is
          * (hour + min/60) twelfths of the way around the
-         * clock-face.  The derivation is left as an excercise
+         * clock-face.  The derivation is left as an exercise
          * for the reader.
          */
 
