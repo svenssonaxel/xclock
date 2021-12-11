@@ -265,7 +265,8 @@ ClockClassRec clockClassRec = {
      /* extension                */ NULL
      },
     {                           /* simple fields */
-     /* change_sensitive         */ XtInheritChangeSensitive
+     /* change_sensitive         */ XtInheritChangeSensitive,
+     /* extension                */ NULL
      },
     {                           /* clock fields */
      /* ignore                   */ 0
