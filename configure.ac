@@ -53,7 +53,9 @@ if test x$use_xft != xno ; then
 	PKG_CHECK_MODULES(XFT, [xrender xft])
 	# Solaris 11 has sqrt in libc but needs libm for sincos
 	AC_SEARCH_LIBS(sqrt, [m])
-	AC_SEARCH_LIBS(sincos, [m])
+	AC_SEARCH_LIBS(sincos, [m],
+            AC_DEFINE([HAVE_SINCOS], [1],
+                      [Define to 1 if you have the `sincos' function.]))
 	XCLOCK_CFLAGS="$XCLOCK_CFLAGS $XFT_CFLAGS"
 	XCLOCK_LIBS="$XCLOCK_LIBS $XFT_LIBS"
 	AC_DEFINE([XRENDER],1,[Define to use X Render Extension])

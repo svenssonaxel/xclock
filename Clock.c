@@ -1734,7 +1734,14 @@ erase_hands(ClockWidget w, struct tm *tm)
 static void
 ClockAngle(double tick_units, double *sinp, double *cosp)
 {
-    sincos(tick_units * (M_PI / 180 / 10.0), sinp, cosp);
+    double angle = tick_units * (M_PI / 180 / 10.0);
+
+#ifdef HAVE_SINCOS
+    sincos(angle, sinp, cosp);
+#else
+    *sinp = sin(angle);
+    *cosp = cos(angle);
+#endif
 }
 
 /*
