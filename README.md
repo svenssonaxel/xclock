@@ -19,3 +19,37 @@ For patch submission instructions, see:
 
   https://www.x.org/wiki/Development/Documentation/SubmittingPatches
 
+# Building and installing
+
+## Debian and Ubuntu
+
+```sh
+# Get dependencies
+sudo apt-get update -y
+sudo apt-get install -y autoconf gcc gettext libxaw7-dev libxft-dev libxkbfile-dev make pkg-config xutils-dev
+# Build
+./autogen.sh
+make
+# Install
+sudo make install
+```
+
+# Configuration example
+
+Put the following in `~/.Xresources`:
+```
+XClock.Clock.analog24: true
+XClock.Clock.update: 1
+XClock.Clock.hourColor: #102077
+XClock.Clock.minuteColor: #3040bb
+XClock.Clock.secondColor: #5060ff
+XClock.Clock.majorColor: #772010
+XClock.Clock.minorColor: #102077
+XClock.Clock.background: #191919
+```
+
+Load the X resources and start xclock:
+```sh
+xrdb ~/.Xresources
+xclock
+```
