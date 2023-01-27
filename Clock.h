@@ -68,6 +68,7 @@ SOFTWARE.
  ----		     -----		-------		-------------
  twentyfour	     Boolean		Boolean		True
  analog		     Boolean		Boolean		True
+ analog24	     Boolean		Boolean		False
  background	     Background		Pixel		white
  backingStore	     BackingStore	BackingStore	default
  border		     BorderColor	Pixel		Black
@@ -95,11 +96,14 @@ SOFTWARE.
 #define XtNhand "hands"
 
 
-		/* Boolean: 24-hour if TRUE */
+		/* Boolean: 24-hour if TRUE and digital */
 #define XtNtwentyfour "twentyfour"
 
 		/* Boolean: digital if FALSE */
 #define XtNanalog "analog"
+
+		/* Boolean: analog 24-hour if TRUE */
+#define XtNanalog24 "analog24"
 
 		/* Boolean: only hour/minute if TRUE */
 #define XtNbrief  "brief"

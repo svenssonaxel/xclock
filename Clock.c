@@ -158,6 +158,8 @@ static XtResource resources[] = {
      offset(utime), XtRImmediate, (XtPointer) FALSE},
     {XtNanalog, XtCBoolean, XtRBoolean, sizeof(Boolean),
      offset(analog), XtRImmediate, (XtPointer) TRUE},
+    {XtNanalog24, XtCBoolean, XtRBoolean, sizeof(Boolean),
+     offset(analog24), XtRImmediate, (XtPointer) FALSE},
     {XtNtwentyfour, XtCBoolean, XtRBoolean, sizeof(Boolean),
      offset(twentyfour), XtRImmediate, (XtPointer) TRUE},
     {XtNbrief, XtCBoolean, XtRBoolean, sizeof(Boolean),
@@ -570,6 +572,9 @@ Initialize(Widget request, Widget new, ArgList args, Cardinal * num_args)
         myXGCV.font = w->clock.font->fid;
     else
         valuemask &= ~GCFont;   /* use server default font */
+
+    if (w->clock.analog24)
+      w->clock.analog = True;
 
     min_width = min_height = ANALOG_SIZE_DEFAULT;
     if (!w->clock.analog) {
@@ -1075,7 +1080,7 @@ RenderHands(ClockWidget w, struct tm *tm, struct timeval *tv, Boolean draw)
 {
     double sec = tm->tm_sec + tv->tv_usec / 1000000.0;
 
-    RenderHand(w, tm->tm_hour * 300 + tm->tm_min * 5 + sec / 12.0, HOUR_HAND_FRACT,
+    RenderHand(w, (tm->tm_hour * 300 + tm->tm_min * 5 + sec / 12.0) / (w->clock.analog24 ? 2.0 : 1), HOUR_HAND_FRACT,
                &w->clock.hour_color, draw);
     RenderHand(w, tm->tm_min * 60 + sec, MINUTE_HAND_FRACT,
                &w->clock.min_color, draw);
@@ -1580,12 +1585,6 @@ clock_tic(XtPointer client_data, XtIntervalId * id)
          * for the reader.
          */
 
-        /*
-         * 12 hour clock.
-         */
-        if (tm.tm_hour >= 12)
-            tm.tm_hour -= 12;
-
 #ifdef XRENDER
         if (w->clock.render && w->clock.can_polygon) {
             w->clock.mask_format = XRenderFindStandardFormat(XtDisplay(w),
@@ -1651,7 +1650,7 @@ clock_tic(XtPointer client_data, XtIntervalId * id)
             w->clock.hour = w->clock.segbuffptr;
             DrawHand(w,
                      w->clock.hour_hand_length, w->clock.hand_width,
-                     tm.tm_hour * 300 + tm.tm_min * 5);
+                     (tm.tm_hour * 300 + tm.tm_min * 5) >> (w->clock.analog24 ? 1 : 0));
             if (w->clock.Hdpixel != w->core.background_pixel) {
                 XFillPolygon(dpy,
                              win, w->clock.HandGC,
@@ -1913,8 +1912,7 @@ SetSeg(ClockWidget w, int x1, int y1, int x2, int y2)
 }
 
 /*
- *  Draw the clock face (every fifth tick-mark is longer
- *  than the others).
+ *  Draw the clock face.
  */
 static void
 DrawClockFace(ClockWidget w)
@@ -1925,34 +1923,40 @@ DrawClockFace(ClockWidget w)
 
     w->clock.segbuffptr = w->clock.segbuff;
     w->clock.numseg = 0;
-    for (i = 0; i < 60; i++) {
+    for (i = 0; i < 120; i++) {
+        Boolean drawHourMark = !(i % (w->clock.analog24 ? 5 : 10));
+        Boolean drawMinuteMark = !drawHourMark && !(i % 2);
+        if(!drawHourMark && !drawMinuteMark)
+            continue;
 #ifdef XRENDER
         if (w->clock.render && w->clock.can_polygon) {
             double s, c;
             XDouble x1, y1, x2, y2;
             XftColor *color;
 
-            ClockAngle(i * 60, &s, &c);
+            ClockAngle(i * 30, &s, &c);
             x1 = c;
             y1 = s;
-            if (i % 5) {
+            if (drawMinuteMark) {
                 x2 = c * (MINOR_TICK_FRACT / 100.0);
                 y2 = s * (MINOR_TICK_FRACT / 100.0);
                 color = &w->clock.minor_color;
             }
-            else {
+            if (drawHourMark) {
                 x2 = c * (SECOND_HAND_FRACT / 100.0);
                 y2 = s * (SECOND_HAND_FRACT / 100.0);
                 color = &w->clock.major_color;
             }
-            RenderLine(w, x1, y1, x2, y2, color, True);
+            if (drawMinuteMark || drawHourMark)
+                RenderLine(w, x1, y1, x2, y2, color, True);
         }
         else
 #endif
         {
-            DrawLine(w, ((i % 5) == 0 ?
-                         w->clock.second_hand_length :
-                         (w->clock.radius - delta)), w->clock.radius, i * 60);
+            if (drawMinuteMark)
+                DrawLine(w, w->clock.radius - delta, w->clock.radius, i * 30);
+            if (drawHourMark)
+                DrawLine(w, w->clock.second_hand_length, w->clock.radius, i * 30);
         }
     }
 #ifdef XRENDER
@@ -2025,6 +2029,9 @@ SetValues(Widget gcurrent, Widget grequest, Widget gnew,
         redisplay = TRUE;
 
     if (new->clock.analog != current->clock.analog)
+        redisplay = TRUE;
+
+    if (new->clock.analog24 != current->clock.analog24)
         redisplay = TRUE;
 
     if (new->clock.font != current->clock.font)

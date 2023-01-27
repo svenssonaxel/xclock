@@ -29,7 +29,7 @@
 .SH NAME
 xclock \- analog / digital clock for X
 .SH SYNOPSIS
-\fBxclock\fP [ \fB\-help\fP ] [ \fB\-analog\fP | \fB\-digital\fP ]
+\fBxclock\fP [ \fB\-help\fP ] [ \fB\-analog\fP | \fB\-analog24\fP | \fB\-digital\fP ]
 [ \fB\-brief\fP ] [ \fB\-chime\fP ] [ \fB\-hd\fP \fIcolor\fP ]
 [ \fB\-hl\fP \fIcolor\fP ] [ \fB\-update\fP \fIseconds\fP ]
 [ \fB\-strftime\fP \fIformat\fP ]
@@ -56,6 +56,10 @@ printed on the standard error.
 .B \-analog
 This option indicates that a conventional 12 hour clock face with tick marks
 and hands should be used.  This is the default.
+.TP 8
+.B \-analog24
+This option indicates that a non-conventional 24 hour clock face with tick marks
+and hands should be used.  This is not the default.
 .TP 8
 \fB\-digital\fP or \fB\-d\fP
 This option indicates that a 24 hour digital clock should be used.
@@ -173,6 +177,10 @@ Note that this resource is not used when Xrender is in effect.
 Specifies whether or not an analog clock should be used instead of a digital
 one.  The default is True.
 .TP 8
+.B analog24 (\fPclass\fB Boolean)
+Specifies whether or not an analog 24 hour clock should be used instead of a
+digital one.  The default is False.
+.TP 8
 .B twentyfour (\fPclass\fB Boolean)
 Specifies whether or not a digital clock should display the time in
 twenty-four hour format.  The default is True.
@@ -229,7 +237,7 @@ The color of the minute hand.
 The color of the second hand.
 .TP 8
 .B majorColor (\fPclass\fB Foreground)
-The color of the major scale ticks (i. e. each five minutes).
+The color of the major scale ticks (i. e. each five minutes or, if -analog24, each 2.5 minutes).
 .TP 8
 .B minorColor (\fPclass\fB Foreground)
 The color of the minor scale ticks (between major ticks).

@@ -2,6 +2,8 @@ xclock is the classic X Window System clock utility.  It displays
 the time in analog or digital form, continuously updated at a
 frequency which may be specified by the user.
 
+This fork also has the capability to display a 24 hour analog clock.
+
 All questions regarding this software should be directed at the
 Xorg mailing list:
 

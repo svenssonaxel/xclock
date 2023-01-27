@@ -62,7 +62,7 @@ SOFTWARE.
 #include <X11/extensions/Xrender.h>
 #endif
 
-#define SEG_BUFF_SIZE		128
+#define SEG_BUFF_SIZE		256
 #ifdef NO_I18N
 #define ASCII_TIME_BUFLEN	32	/* big enough for 26 plus slop */
 #define STRFTIME_BUFF_SIZE      100     /* buffer for "strftime" option */
@@ -91,6 +91,7 @@ typedef struct {
 	 Boolean chime;
 	 Boolean beeped;
 	 Boolean analog;
+	 Boolean analog24;
 	 Boolean brief;
 	 Boolean twentyfour;
 	 Boolean utime;

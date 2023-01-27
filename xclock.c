@@ -75,6 +75,7 @@ static XrmOptionDescRec options[] = {
 {"-d",		"*clock.analog",	XrmoptionNoArg,		"FALSE"},
 {"-digital",	"*clock.analog",	XrmoptionNoArg,		"FALSE"},
 {"-analog",	"*clock.analog",	XrmoptionNoArg,		"TRUE"},
+{"-analog24",	"*clock.analog24",	XrmoptionNoArg,		"TRUE"},
 {"-twelve",	"*clock.twentyfour",	XrmoptionNoArg,		"FALSE"},
 {"-twentyfour",	"*clock.twentyfour",	XrmoptionNoArg,		"TRUE"},
 {"-brief",	"*clock.brief",		XrmoptionNoArg,		"TRUE"},
@@ -104,7 +105,7 @@ static void _X_NORETURN
 Syntax(const char *call)
 {
     fprintf (stderr, "Usage: %s %s", call,
-	    "[-analog] [-bw <pixels>] [-digital] [-brief]\n"
+	    "[-analog] [-analog24] [-bw <pixels>] [-digital] [-brief]\n"
 	    "       [-utime] [-strftime <fmt-str>]\n"
 	    "       [-fg <color>] [-bg <color>] [-hd <color>]\n"
 	    "       [-hl <color>] [-bd <color>]\n"
