@@ -38,14 +38,25 @@ sudo make install
 
 Put the following in `~/.Xresources`:
 ```
+! General xclock settings
 XClock.Clock.analog24: true
 XClock.Clock.update: 1
-XClock.Clock.hourColor: #102077
-XClock.Clock.minuteColor: #3040bb
-XClock.Clock.secondColor: #5060ff
-XClock.Clock.majorColor: #772010
-XClock.Clock.minorColor: #102077
 XClock.Clock.background: #191919
+XClock.Clock.height: 164
+XClock.Clock.width: 164
+
+! Colors for xclock -norender
+XClock.Clock.hands: #5060cc
+XClock.Clock.highlight: #7080ff
+XClock.Clock.foreground: #90a0ff
+XClock.Clock.padding: 20
+
+! Colors for xclock -render
+XClock.Clock.hourColor: #304099
+XClock.Clock.minuteColor: #5060cc
+XClock.Clock.secondColor: #7080ff
+XClock.Clock.majorColor: #cc6050
+XClock.Clock.minorColor: #5060cc
 ```
 
 Load the X resources and start xclock:
