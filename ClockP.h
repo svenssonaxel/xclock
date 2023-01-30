@@ -124,6 +124,7 @@ typedef struct {
 	 XftColor	sec_color;
 	 XftColor	major_color;
 	 XftColor	minor_color;
+	 Boolean	circular;
 	 XftFont	*face;
 	 XRenderPictFormat  *mask_format;
 

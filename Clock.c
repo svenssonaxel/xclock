@@ -197,6 +197,8 @@ static XtResource resources[] = {
      offset(major_color), XtRString, XtDefaultForeground},
     {XtNminorColor, XtCForeground, XtRXftColor, sizeof(XftColor),
      offset(minor_color), XtRString, XtDefaultForeground},
+    {XtNCircular, XtCBoolean, XtRBoolean, sizeof(Boolean),
+     offset(circular), XtRImmediate, (XtPointer) FALSE},
     {XtNface, XtCFace, XtRXftFont, sizeof(XftFont *),
      offset(face), XtRString, ""},
 #endif
@@ -1215,8 +1217,12 @@ Resize(Widget gw)
         w->clock.centerY = w->core.height / 2;
     }
 #ifdef XRENDER
-    w->clock.x_scale = 0.45 * w->core.width;
-    w->clock.y_scale = 0.45 * w->core.height;
+    if(w->clock.circular)
+        w->clock.x_scale = w->clock.y_scale = 0.45 * min(w->core.width, w->core.height);
+    else {
+        w->clock.x_scale = 0.45 * w->core.width;
+        w->clock.y_scale = 0.45 * w->core.height;
+    }
     w->clock.x_off = 0.5 * w->core.width;
     w->clock.y_off = 0.5 * w->core.height;
     if (w->clock.pixmap) {
@@ -2092,6 +2098,8 @@ SetValues(Widget gcurrent, Widget grequest, Widget gnew,
         !sameColor(&new->clock.minor_color, &current->clock.minor_color))
         redisplay = True;
     if (new->clock.sharp != current->clock.sharp)
+        redisplay = True;
+    if (new->clock.circular != current->clock.circular)
         redisplay = True;
     if (new->clock.render != current->clock.render)
         redisplay = True;

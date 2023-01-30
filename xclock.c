@@ -86,6 +86,7 @@ static XrmOptionDescRec options[] = {
 {"-render",	"*clock.render",	XrmoptionNoArg,		"TRUE"},
 {"-norender",	"*clock.render",	XrmoptionNoArg,		"FALSE"},
 {"-sharp",	"*clock.sharp",		XrmoptionNoArg,		"TRUE"},
+{"-circular",	"*clock.circular",	XrmoptionNoArg,		"TRUE"},
 #endif
 };
 
@@ -113,6 +114,7 @@ Syntax(const char *call)
 	    "       [-rv] [-update <seconds>] [-display displayname]\n"
 #ifdef XRENDER
 	    "       [-[no]render] [-face <face name>] [-sharp]\n"
+            "       [-circular]\n"
 #endif
 	    "       [-geometry geom] [-twelve] [-twentyfour]\n\n");
     exit(1);

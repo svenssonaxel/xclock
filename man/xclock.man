@@ -38,6 +38,7 @@ xclock \- analog / digital clock for X
 [ \fB\-norender\fP ]
 [ \fB\-render\fP ]
 [ \fB\-sharp\fP ]
+[ \fB\-circular\fP ]
 [ \fB\-face\fP \fIpattern\fP ]
 .SH DESCRIPTION
 The
@@ -126,6 +127,10 @@ This option turns off the use of Xrender to draw the clock.
 .B \-sharp
 This option tells \fIxclock\fP to use sharper edges when drawn using
 the Xrender extension.
+.TP 8
+.B \-circular
+When drawn using the Xrender extension, this option tells \fIxclock\fP to use
+a circular clock face, even if the window is not square.
 .TP 8
 .B \-face \fIpattern\fP
 This option specifies the font to use in digital mode when the
@@ -241,6 +246,9 @@ The color of the major scale ticks (i. e. each five minutes or, if -analog24, ea
 .TP 8
 .B minorColor (\fPclass\fB Foreground)
 The color of the minor scale ticks (between major ticks).
+.TP 8
+.B circular (\fPclass\fB Boolean)
+If true, make a circular clock even if the window is not square.
 .SH WIDGETS
 In order to specify resources, it is useful to know the hierarchy of
 the widgets which compose \fIxclock\fR.  In the notation below,

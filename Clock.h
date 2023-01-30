@@ -134,6 +134,9 @@ SOFTWARE.
 #define XtNmajorColor "majorColor"
 #define XtNminorColor "minorColor"
 
+		/* circular: Make a circular clock even if window is not square */
+#define XtNCircular "circular"
+
 #define XtRXftColor "XftColor"
 
 #define XtNface "face"
