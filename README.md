@@ -59,7 +59,7 @@ XClock.Clock.minuteColor: #5060cc
 XClock.Clock.secondColor: #7080ff
 XClock.Clock.majorColor: #cc6050
 XClock.Clock.minorColor: #5060cc
-XClock.Clock.circular: #true
+XClock.Clock.circular: true
 ```
 
 Load the X resources and start xclock:
