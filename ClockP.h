@@ -71,6 +71,12 @@ SOFTWARE.
 #endif
 
 
+#ifdef XRENDER
+typedef struct {
+  int npoints;
+  XPointDouble* points;
+} XftShape;
+#endif
 
 /* New fields for the clock widget instance record */
 typedef struct {
@@ -124,6 +130,17 @@ typedef struct {
 	 XftColor	sec_color;
 	 XftColor	major_color;
 	 XftColor	minor_color;
+	 XftColor	am_color;
+	 XftColor	pm_color;
+	 XftShape	hour_shape;
+	 XftShape	min_shape;
+	 XftShape	sec_shape;
+	 XftShape	major_shape;
+	 XftShape	minor_shape;
+	 XftShape	am_shape;
+	 XftShape	pm_shape;
+	 Boolean	rotate_ampm;
+	 Boolean	ampm_atop_hour;
 	 Boolean	circular;
 	 XftFont	*face;
 	 XRenderPictFormat  *mask_format;

@@ -247,6 +247,44 @@ The color of the major scale ticks (i. e. each five minutes or, if -analog24, ea
 .B minorColor (\fPclass\fB Foreground)
 The color of the minor scale ticks (between major ticks).
 .TP 8
+.B amColor (\fPclass\fB Foreground)
+The color of the AM marker.
+.TP 8
+.B pmColor (\fPclass\fB Foreground)
+The color of the PM marker.
+.TP 8
+.B hourShape (\fPclass\fB String)
+The shape of the hour hand.
+.sp
+The shape is given as a series of points, each group of 3 points describing a triangle.
+A point can be given as \fB(X, Y)\fP where \fB(0, 0)\fP is at the center of the clock face, \fB(0, 100)\fP at the top perimeter when the hand is pointing up and \fB(100, 0)\fP at the right perimeter when the hand is pointing up.
+A point can also be given as an integer index where \fB0\fP refers to the first point, \fB-1\fP to the previous point etc.
+An empty string will render as nothing.
+.TP 8
+.B minuteShape (\fPclass\fB String)
+The shape of the minute hand.
+.TP 8
+.B secondShape (\fPclass\fB String)
+The shape of the second hand.
+.TP 8
+.B majorShape (\fPclass\fB String)
+The shape of the major scale ticks (i. e. each five minutes or, if -analog24, each 2.5 minutes).
+.TP 8
+.B minorShape (\fPclass\fB String)
+The shape of the minor scale ticks (between major ticks).
+.TP 8
+.B amShape (\fPclass\fB String)
+The shape of the AM marker.
+.TP 8
+.B pmShape (\fPclass\fB String)
+The shape of the PM marker.
+.TP 8
+.B rotateAmpm (\fPclass\fB Boolean)
+If true, rotate the AM and PM markers at the same rate as the hour hand.
+.TP 8
+.B ampmAtopHour (\fPclass\fB Boolean)
+If true, the AM and PM markers are rendered over the hour hand, rather than under.
+.TP 8
 .B circular (\fPclass\fB Boolean)
 If true, make a circular clock even if the window is not square.
 .SH WIDGETS
@@ -261,6 +299,24 @@ XClock  xclock
         Clock  clock
 .fi
 .ft
+.sp
+.SH EXAMPLE USE OF X RESOURCES
+As an example, add the following to ~/.Xresources:
+.sp
+.ft CW
+.nf
+XClock.Clock.hourColor: #304099
+XClock.Clock.minuteColor: #5060cc
+XClock.Clock.secondColor: #7080ff
+XClock.Clock.majorColor: #cc6050
+XClock.Clock.minorColor: #5060cc
+XClock.Clock.hourShape: (-5, 30) (0, 5) (0, 35) -2 -2 (5, 30) \\
+                        (-1, 37.5) (0, 38.5) (0, 36.5) -2 -2 (1, 37.5) \\
+                        (-1, 0) (0, 1) (0, -1) -2 -2 (1, 0)
+.fi
+.ft
+.sp
+Then run \fBxrdb ~/.Xresources\fP and start \fBxclock\fP.
 .sp
 .SH ENVIRONMENT
 .PP

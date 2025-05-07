@@ -133,17 +133,34 @@ SOFTWARE.
 #define XtNsecondColor "secondColor"
 #define XtNmajorColor "majorColor"
 #define XtNminorColor "minorColor"
+#define XtNamColor "amColor"
+#define XtNpmColor "pmColor"
+
+		/* XftShape: shapes for various clock elements */
+#define XtNhourShape "hourShape"
+#define XtNminuteShape "minuteShape"
+#define XtNsecondShape "secondShape"
+#define XtNmajorShape "majorShape"
+#define XtNminorShape "minorShape"
+#define XtNamShape "amShape"
+#define XtNpmShape "pmShape"
+
+		/* rotateAmpm: Make the AM and PM markers rotate at the same speed as the hour hand */
+#define XtNrotateAmpm "rotateAmpm"
+		/* ampmAtopHour: Make the AM and PM markers render on top of the hour hand */
+#define XtNampmAtopHour "ampmAtopHour"
 
 		/* circular: Make a circular clock even if window is not square */
-#define XtNCircular "circular"
+#define XtNcircular "circular"
 
 #define XtRXftColor "XftColor"
+#define XtRXftShape "XftShape"
 
 #define XtNface "face"
 #define XtCFace "Face"
 #define XtRXftFont "XftFont"
 
-		/* Boolean: use sharp rendering for Render polygons */
+		/* Boolean: use sharp rendering for Render shapes */
 #define XtNsharp "sharp"
 #define XtCSharp "Sharp"
 
